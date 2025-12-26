@@ -1,3 +1,30 @@
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve, auc
+st.divider()
+st.subheader("📈 Model Performance (ROC Curve)")
+
+# Load stored test predictions (temporary demo approach)
+# In production, this would be precomputed and stored
+y_true = joblib.load("models/y_test.pkl") if "y_test.pkl" in os.listdir("models") else None
+y_scores = joblib.load("models/test_pred.pkl") if "test_pred.pkl" in os.listdir("models") else None
+
+if y_true is not None and y_scores is not None:
+    fpr, tpr, _ = roc_curve(y_true, y_scores)
+    roc_auc = auc(fpr, tpr)
+
+    fig, ax = plt.subplots()
+    ax.plot(fpr, tpr, label=f"AUC = {roc_auc:.2f}")
+    ax.plot([0, 1], [0, 1], linestyle="--")
+    ax.set_xlabel("False Positive Rate")
+    ax.set_ylabel("True Positive Rate")
+    ax.legend()
+
+    st.pyplot(fig)
+else:
+    st.info("ROC curve available in model evaluation notebook.")
+
+
+
 import streamlit as st
 import pandas as pd
 import numpy as np
